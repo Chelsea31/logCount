@@ -4,7 +4,7 @@ package com.example.logCount.entity;
  * @author Shubham Bansal
  */
 
-import com.example.logCount.object.LogLevel;
+import com.example.logCount.models.constants.LogLevel;
 import lombok.Data;
 
 import javax.persistence.Column;

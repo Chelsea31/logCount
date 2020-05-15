@@ -5,7 +5,7 @@ package com.example.logCount.repository;
  */
 
 import com.example.logCount.entity.LogEntity;
-import com.example.logCount.object.LogLevel;
+import com.example.logCount.models.constants.LogLevel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package com.example.logCount.object;
+package com.example.logCount.models.constants;
 
 /*
  * @author Shubham Bansal

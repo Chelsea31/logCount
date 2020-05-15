@@ -5,8 +5,9 @@ package com.example.logCount.orchestration;
  */
 
 import com.example.logCount.entity.LogEntity;
-import com.example.logCount.object.LogLevel;
-import com.example.logCount.object.LogObject;
+import com.example.logCount.models.LogObject;
+import com.example.logCount.models.constants.LogLevel;
+import com.example.logCount.models.constants.NotificationChannels;
 import com.example.logCount.reader.CustomFileReader;
 import com.example.logCount.repository.LogEntityRepository;
 import lombok.SneakyThrows;
@@ -62,13 +63,14 @@ public class OrchestrationObject {
         return task;
     }
 
-    private Runnable createCountTask(LogLevel logLevel, int time, int maxCount, int sleepTime) {
+    private Runnable createCountTask(LogLevel logLevel, int window, int maxCount, int sleepTime, List<NotificationChannels> notificationChannels) {
         Runnable task = new Runnable() {
             @SneakyThrows
             @Override
             public void run() {
-                List<LogEntity> logsForTime = logLevel.getLogsForTime(time, repository);
+                List<LogEntity> logsForTime = logLevel.getLogsForTime(window, repository);
                 if (logsForTime.size() > maxCount) {
+                    notificationChannels.stream().forEach(notification -> notification.sendNotification());
                     Thread.sleep(sleepTime);
                 }
             }
@@ -81,8 +83,8 @@ public class OrchestrationObject {
         executorService.submit(task);
     }
 
-    public void orchestrateCounting(LogLevel logLevel, int time, int maxCount, int sleepTime) throws InterruptedException {
-        Runnable countTask = createCountTask(logLevel, time, maxCount, sleepTime);
+    public void orchestrateCounting(LogLevel logLevel, int window, int maxCount, int sleepTime, List<NotificationChannels> notificationChannels) throws InterruptedException {
+        Runnable countTask = createCountTask(logLevel, window, maxCount, sleepTime, notificationChannels);
         scheduledExecutorService.scheduleAtFixedRate(countTask, 0, 1, TimeUnit.SECONDS);
     }
 
